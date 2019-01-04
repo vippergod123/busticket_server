@@ -4,11 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql');
+var sessions = require('express-session');
 
-//Router
-var indexRouter = require('./routes/index');
-var busCompanyRouter = require('./routes/BusCompany/busCompany');
-var routesRouter = require('./routes/Routes/routes');
+
 //
 var app = express();
 
@@ -22,28 +20,40 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Setting for passport  & session
+var Passport = require("./models/Passport");
 
-// //Create connection to MYSQL
-// var sqlConnection = mysql.createConnection({
-//   host:"127.0.0.1",
-//   user: "root",
-//   password: null,
-//   database:"id5460038_busticket",
-// })
+app.use(Passport.initialize());
+app.use(Passport.session())
 
-// sqlConnection.connect(function(err) {
-//   if (err) 
-//    console.log(err);
-//   else 
-//     console.log("Connected!!!")
-// });
+app.use(sessions({  
+  secret: '(!)*#(!JE)WJEqw09ej12',
+  resave: false,
+  saveUninitialized: true
+}));
+//
 
 
-// Api Web 
+//Router for customer
+var indexRouter = require('./routes/index');
+var busCompanyRouter = require('./routes/Customer/BusCompany/busCompany');
+var routesRouter = require('./routes/Customer/Routes/routes');
+var tripsRouter = require('./routes/Customer/Trips/trips');
+var signInRouter = require('./routes/Customer/Authentication/signin');
+var signOutRouter = require('./routes/signout');
+
+
 app.use('/', indexRouter);
 app.use('/busCompany', busCompanyRouter);
 app.use('/busRoute', routesRouter);
-// app.use('/getRoutes', routes);
+app.use('/trips', tripsRouter);
+app.use('/signin', signInRouter);
+app.use('/signout', signOutRouter);
+//Router for admin
+
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 /* GET users listing. */
-var configPostgres = require('../../config/postgresSQL');
 const { Pool, Client } = require('pg')
 
 
@@ -21,10 +20,14 @@ const client = new Client({
 client.connect()
 
 
-router.get('/getBus', function(req, res, next) {
+router.get('/update', function(req, res, next) {
   pool.connect()
+  
   .then( client => {
-    return client.query('SELECT * From bus_company', (err,data) => {
+    return client.query("Select * " + 
+                        "from bus_trip as bt, bus_route as br, bus as b, ticket_detail as td, bus_company as bc " +
+                        "where bt.bus_id = b.bus_id and bt.bus_route_id = br.bus_route_id and td.bus_id = bt.bus_id And bc.bus_company_id = b.bus_company_id"
+    , (err,data) => {
       if (!data) 
         res.json({
           error: "Wrong query!"
@@ -33,7 +36,7 @@ router.get('/getBus', function(req, res, next) {
         res.json({
           data: data.rows,
         })
-        client.release();
+      client.release();
     })
   })
   .catch(err => { console.log(err)})
