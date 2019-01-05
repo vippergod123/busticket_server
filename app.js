@@ -39,7 +39,9 @@ var indexRouter = require('./routes/index');
 var busCompanyRouter = require('./routes/Customer/BusCompany/busCompany');
 var routesRouter = require('./routes/Customer/Routes/routes');
 var tripsRouter = require('./routes/Customer/Trips/trips');
+var paymentRouter = require('./routes/Payment/payment');
 var signInRouter = require('./routes/Customer/Authentication/signin');
+var profileRouter = require('./routes/Customer/Profile/profile');
 var signOutRouter = require('./routes/signout');
 
 
@@ -47,6 +49,9 @@ app.use('/', indexRouter);
 app.use('/busCompany', busCompanyRouter);
 app.use('/busRoute', routesRouter);
 app.use('/trips', tripsRouter);
+app.use('/payment', paymentRouter);
+app.use('/profile', profileRouter);
+
 app.use('/signin', signInRouter);
 app.use('/signout', signOutRouter);
 //Router for admin

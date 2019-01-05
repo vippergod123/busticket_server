@@ -19,6 +19,7 @@
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "paypal-rest-sdk": "^1.8.1",
     "pg": "^7.7.1"
   }
 }

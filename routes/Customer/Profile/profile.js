@@ -19,22 +19,49 @@ const client = new Client({
 })
 client.connect()
 
-
-router.get('/update', function(req, res, next) {
+router.get('/', (req,res) => { 
+  var email = req.body.email;
   pool.connect()
-  
   .then( client => {
-    return client.query("Select * " + 
-                        "from bus_trip as bt, bus_route as br, bus as b, ticket_detail as td, bus_company as bc " +
-                        "where bt.bus_id = b.bus_id and bt.bus_route_id = br.bus_route_id and td.bus_id = bt.bus_id And bc.bus_company_id = b.bus_company_id"
+    return client.query("Select * from customer where email = ($1)", [email] 
     , (err,data) => {
-      if (!data) 
+      if (err) {
+        console.log(err);
         res.json({
           error: "Wrong query!"
         })
+      }
       else 
         res.json({
-          data: data.rows,
+          profile: data.rows
+        })
+      client.release();
+    })
+  })
+  .catch(err => { console.log(err)})
+})
+
+
+router.post('/update', function(req, res, next) {
+  
+  var profile = req.body
+  pool.connect()
+  .then( client => {
+    return client.query("update 	customer "+
+                        "set 	fullname = ($1), gender = ($2), phone = ($3), identify_card = ($4), " +
+                              "address = ($5), hobby = ($6), password = ($7) "+
+                        "where 	email = 'nva@gmail.com'", 
+                        [profile.fullname, profile.gender, profile.phone, profile.identify_card, profile.address, profile.hobby, profile.password]
+    , (err,data) => {
+      if (err) {
+        console.log(err);
+        res.json({
+          error: "Wrong query!"
+        })
+      }
+      else 
+        res.json({
+          message: "Update success!",
         })
       client.release();
     })
