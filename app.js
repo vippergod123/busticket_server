@@ -3,9 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var mysql = require('mysql');
 var sessions = require('express-session');
-
+var bodyParser = require('body-parser');
 
 //
 var app = express();
@@ -13,10 +12,19 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+
+app.use(sessions({  
+  secret: '(!)*#(!JE)WJEqw09ej12',
+  resave: false,
+  saveUninitialized: true
+}));
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -26,11 +34,6 @@ var Passport = require("./models/Passport");
 app.use(Passport.initialize());
 app.use(Passport.session())
 
-app.use(sessions({  
-  secret: '(!)*#(!JE)WJEqw09ej12',
-  resave: false,
-  saveUninitialized: true
-}));
 //
 
 
@@ -40,10 +43,12 @@ var busCompanyRouter = require('./routes/Customer/BusCompany/busCompany');
 var routesRouter = require('./routes/Customer/Routes/routes');
 var tripsRouter = require('./routes/Customer/Trips/trips');
 var paymentRouter = require('./routes/Payment/payment');
-var signInRouter = require('./routes/Customer/Authentication/signin');
 var profileRouter = require('./routes/Customer/Profile/profile');
-var signOutRouter = require('./routes/signout');
+var customersRouter = require('./routes/Customer/customers');
 
+var signOutRouter = require('./routes/signout');
+var signInRouter = require('./routes/Customer/Authentication/signin');
+var signUpRouter = require('./routes/Customer/Authentication/signup');
 
 app.use('/', indexRouter);
 app.use('/busCompany', busCompanyRouter);
@@ -51,8 +56,11 @@ app.use('/busRoute', routesRouter);
 app.use('/trips', tripsRouter);
 app.use('/payment', paymentRouter);
 app.use('/profile', profileRouter);
+app.use('/customers', customersRouter);
+
 
 app.use('/signin', signInRouter);
+app.use('/signup', signUpRouter);
 app.use('/signout', signOutRouter);
 //Router for admin
 

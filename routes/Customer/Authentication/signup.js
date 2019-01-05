@@ -20,21 +20,23 @@ const client = new Client({
 client.connect()
 
 
-router.get('/update', function(req, res, next) {
-  console.log(req.user);
+router.post('/', function(req, res, next) {
+  var profile = req.body
   pool.connect()
   .then( client => {
-    return client.query("update customer " + 
-                        "Set " +
-                        "where email = '"+123+"'"
+    return client.query("INSERT INTO customer (email, fullname,gender,phone,identify_card,address,hobby,password) "+
+                        "VALUES ( ($1), ($2), ($3), ($4), ($5), ($6), ($7), ($8))",
+                        [profile.email, profile.fullname, profile.gender, profile.phone, profile.identity_card, profile.address, profile.hobby, profile.password]
     , (err,data) => {
-      if (!data) 
+      if (err) {
+        console.log(err);
         res.json({
           error: "Wrong query!"
         })
+      }
       else 
         res.json({
-          data: data.rows,
+          message: "Update success!",
         })
       client.release();
     })
@@ -43,3 +45,5 @@ router.get('/update', function(req, res, next) {
 });
 
 module.exports = router;
+
+

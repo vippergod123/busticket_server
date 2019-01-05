@@ -23,7 +23,10 @@ router.post('/', function(req, res, next) {
         isValid = err?false:true
 
         req.logIn(user, function (err) { 
+            console.log(err);
+            
             isValid= user?true:false
+            isValid = err?false:true
         })
         if (isValid) { 
             return res.status(200).json({

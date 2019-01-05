@@ -1,11 +1,14 @@
-export const isLogged =(req,res,next) => {
-    if (req.user) {
-        return next();
-      } 
-      else {
-        res.json({
-            message: "Sign in first",
-            redirect: "/signin",
-        })
-    }
-}
+function isLoggedin(req, res, next) {  
+    if (!req.user) {
+      res.json({
+        error: "You not sign in yet!",
+        redirect: "/signin",
+      })
+    }  
+    else {
+      return next()
+    }  
+    
+ }
+
+ module.exports.isLoggedin = isLoggedin

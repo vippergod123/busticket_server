@@ -16,8 +16,8 @@ router.post('/', function(req, res, next) {
             "payment_method": "paypal"
         },
         "redirect_urls": {
-            "return_url": "http://localhost:3000/success",
-            "cancel_url": "http://localhost:3000/cancel"
+            "return_url": "http://localhost:3000/payment/success",
+            "cancel_url": "http://localhost:3000/payment/cancel"
         },
         "transactions": [{
             "item_list": {
