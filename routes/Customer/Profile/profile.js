@@ -19,7 +19,7 @@ const client = new Client({
 })
 client.connect()
 
-router.get('/', (req,res) => { 
+router.post('/', (req,res) => { 
   var email = req.body.email;
   pool.connect()
   .then( client => {
