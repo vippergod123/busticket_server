@@ -33,7 +33,7 @@ router.post('/', (req,res) => {
       }
       else 
         res.json({
-          profile: data.rows
+          profile: data.rows[0]
         })
       client.release();
     })
