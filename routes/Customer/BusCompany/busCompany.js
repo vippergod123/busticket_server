@@ -43,15 +43,17 @@ router.post('/company', function(req, res, next) {
   pool.connect()
   .then( client => {
     return client.query("select * from bus_company where displayname = ($1)",[company], (err,data) => {
-      if (!data) 
+      if (err) {
+        console.log(err);
         res.json({
           error: "Wrong query!"
         })
+      }
       else 
         res.json({
-          data: data.rows,
+          profile: data.rows[0]
         })
-        client.release();
+      client.release();
     })
   })
   .catch(err => { console.log(err)})
