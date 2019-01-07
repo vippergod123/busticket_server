@@ -51,7 +51,7 @@ router.post('/company', function(req, res, next) {
       }
       else 
         res.json({
-          profile: data.rows[0]
+          company: data.rows[0]
         })
       client.release();
     })
