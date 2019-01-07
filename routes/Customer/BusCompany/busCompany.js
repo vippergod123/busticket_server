@@ -38,4 +38,23 @@ router.get('/getBus', function(req, res, next) {
   .catch(err => { console.log(err)})
 });
 
+router.post('/company', function(req, res, next) {
+  var company = req.body.company
+  pool.connect()
+  .then( client => {
+    return client.query("select * from bus_company where displayname = ($1)",[company], (err,data) => {
+      if (!data) 
+        res.json({
+          error: "Wrong query!"
+        })
+      else 
+        res.json({
+          data: data.rows,
+        })
+        client.release();
+    })
+  })
+  .catch(err => { console.log(err)})
+});
+
 module.exports = router;
