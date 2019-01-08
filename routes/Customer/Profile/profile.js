@@ -42,7 +42,7 @@ router.get('/',isLoggedin, (req,res) => {
 })
 
 
-router.post('/update', function(req, res, next) {
+router.post('/update',isLoggedin, function(req, res, next) {
   
   var profile = req.body
   pool.connect()
